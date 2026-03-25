@@ -1,6 +1,6 @@
 from SmartThing import *
 from Sensors import *
-
+# Я подключился тестируем комит
 class BusStation(SmartThing):
     """
     BusStation obj
