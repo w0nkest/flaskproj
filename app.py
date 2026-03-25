@@ -31,9 +31,9 @@ def connectionchecking():
 @app.route('/api/status')
 def get_station_status():
     
-    time_sensor = Time(101, 'Main St.')
-    temp_sensor = Temperature(201, 'Main St.')
-    station = BusStation(6, 'University', time_sensor, temp_sensor)
+    time_sensor = Time(101, 'Фитнес-Хаус на Блюхера')
+    temp_sensor = Temperature(201, 'Фитнес-Хаус на Блюхера')
+    station = BusStation(6, 'Фитнес-Хаус на Блюхера', time_sensor, temp_sensor)
     
     station.connection()
     time_sensor.connection()
@@ -42,7 +42,7 @@ def get_station_status():
     
     result = station.send_data()
      
-    return jsonify(result)
+    return render_template('station_status.html', data = result)
 
 
 if __name__ == '__main__':
