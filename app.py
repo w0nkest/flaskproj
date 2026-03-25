@@ -1,7 +1,5 @@
 from flask import Flask, render_template
-from Sensors import *
-from BusStation import *
-from devcheck import *
+from tools.devcheck import *
 
 app = Flask(__name__)
 

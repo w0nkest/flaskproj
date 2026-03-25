@@ -1,6 +1,5 @@
-from Sensors import *
-from BusStation import *
-from SmartThing import *
+from models.BusStation import *
+from models.SmartThing import *
 
 def check_send_data(creature: SmartThing):
     creature.send_data()
