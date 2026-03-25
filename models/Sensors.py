@@ -31,6 +31,7 @@ class Temperature(SmartThing):
         :return: string, contains temperature
         """
         super().update_info()
+        self.temp = randint(-30, 30) # При обновлении новая температура
         return f'Now temperature reached {self.temp}'
 
     def draw_precipitations(self):
@@ -81,6 +82,7 @@ class Time(SmartThing):
         :return: string containing current time
         """
         super().update_info()
+        self.currenttime = time.strftime("%H:%M:%S") # Выводим актуальное время
         return f'Now is {self.currenttime}'
 
     def request_data(self):
