@@ -1,6 +1,6 @@
 from SmartThing import *
 from Sensors import *
-# Я подключился тестируем комит
+
 class BusStation(SmartThing):
     def __init__(self, id: int, location: str, clock: Time, temp: Temperature):
         super().__init__(id, location)
