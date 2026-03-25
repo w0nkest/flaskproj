@@ -28,21 +28,35 @@ def connectionchecking():
 
     return render_template('connections.html', time=timec, temp=tempc, bs=bsc, bus=busc)
 
+@app.route('/status')
+def show_status():
+    time_s = Time(101, 'Фитнес-Хаус на Блюхера')
+    temp_s = Temperature(201, 'Фитнес-Хаус на Блюхера')
+    station = BusStation(6, 'Фитнес-Хаус на Блюхера', time_s, temp_s)
+    bus = Bus('222', [station])
+    
+    return render_template('station_status.html', data=station.send_data(), bus=bus.send_GPS())
+
 @app.route('/api/status')
 def get_station_status():
     
     time_sensor = Time(101, 'Фитнес-Хаус на Блюхера')
     temp_sensor = Temperature(201, 'Фитнес-Хаус на Блюхера')
     station = BusStation(6, 'Фитнес-Хаус на Блюхера', time_sensor, temp_sensor)
+    bus = Bus('222', [station])
     
     station.connection()
+    bus.connection()
     time_sensor.connection()
     temp_sensor.connection()
-    station.update_info()
     
-    result = station.send_data()
+    station.update_info()
+    bus.update_route_screen()
      
-    return render_template('station_status.html', data = result)
+    return jsonify({
+        'station': station.send_data(),
+        'bus': bus.send_GPS()
+    })
 
 
 if __name__ == '__main__':

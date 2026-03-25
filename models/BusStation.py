@@ -1,5 +1,6 @@
 from models.SmartThing import *
 from models.Sensors import *
+import random
 
 class BusStation(SmartThing):
     """
@@ -81,13 +82,15 @@ class Bus:
         self.route = route
         self.stations = stations
         self.connect = False
+        self.lat = 59.9343
+        self.lon = 30.3351
 
     def connection(self):
         """
         Establishes connection
         """
         self.connect = True
-        print('Connect established')
+        print(f'Bus {self.route} connected to GPS')
 
     def check_connection(self) -> str:
         """
@@ -100,11 +103,20 @@ class Bus:
         """
         Updates route screen
         """
-        print('Route screen will be updated')
+        if self.connect:
+            self.lat += random.uniform(-0.001, 0.001)
+            self.lon += random.uniform(-0.001, 0.001)
+            return f"Bus {self.route} is moving..."
+        return "Bus is offline"
 
     def send_GPS(self):
         """
         Sends GPS data
         :return: string: GPS
         """
-        print('GPS will be sent')
+        return {
+            'route': self.route,
+            'lat': round(self.lat, 4),
+            'lon': round(self.lon, 4),
+            'status': 'In route' if self.connect else 'In depot'
+        }
