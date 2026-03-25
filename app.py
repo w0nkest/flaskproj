@@ -28,7 +28,7 @@ def connectionchecking():
 
     return render_template('connections.html', time=timec, temp=tempc, bs=bsc, bus=busc)
 
-@app.route('/api/status')
+@app.route('/status')
 def get_station_status():
     
     time_sensor = Time(101, 'Фитнес-Хаус на Блюхера')

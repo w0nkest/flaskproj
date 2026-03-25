@@ -15,7 +15,7 @@ class Temperature(SmartThing):
         :param temp: takes temperature as param, unnecessary, if not given takes random number between -30 and 30
         """
         super().__init__(id, location)
-        self.temp = temp if temp is not None else randint(-30, 30)
+        self.temp = temp
 
     def check_connection(self) -> str:
         """
@@ -34,7 +34,7 @@ class Temperature(SmartThing):
         # Симуляция изменения температуры
         variation = randint(-2, 2)
         self.temp += variation
-        # Мы в хорошем климотическом поясе
+        # Мы в хорошем климатическом поясе
         if self.temp < -40: self.temp = -40
         if self.temp > 40: self.temp = 40
         return f'Now temperature reached {self.temp}'
@@ -71,7 +71,7 @@ class Time(SmartThing):
     """
     Time class, creates Time sensor - clock
     """
-    def __init__(self, id: int, location: str, currenttime: str=str(time.time())):
+    def __init__(self, id: int, location: str, currenttime: str=time.strftime("%H:%M:%S")):
         """
         Constructor
         :param id: index
@@ -79,7 +79,7 @@ class Time(SmartThing):
         :param currenttime: unnecessary, takes time in string format
         """
         super().__init__(id, location)
-        self.currenttime = time.strftime("%H:%M:%S")
+        self.currenttime = currenttime
 
     def check_connection(self) -> str:
         """
