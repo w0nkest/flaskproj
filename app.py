@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from tools.devcheck import *
 
 app = Flask(__name__)
@@ -28,6 +28,21 @@ def connectionchecking():
 
     return render_template('connections.html', time=timec, temp=tempc, bs=bsc, bus=busc)
 
+@app.route('/api/status')
+def get_station_status():
+    
+    time_sensor = Time(101, 'Main St.')
+    temp_sensor = Temperature(201, 'Main St.')
+    station = BusStation(6, 'University', time_sensor, temp_sensor)
+    
+    station.connection()
+    time_sensor.connection()
+    temp_sensor.connection()
+    station.update_info()
+    
+    result = station.send_data()
+     
+    return jsonify(result)
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@ class Temperature(SmartThing):
         """
         print('Precipitations will be drawn')
 
-    def send_data(self):
+    def send_data(self) -> dict:
         """
         Sends current data
         :return: -list, contains temp, location...-
@@ -104,7 +104,7 @@ class Time(SmartThing):
         """
         print('Data from time will be requested')
 
-    def send_data(self):
+    def send_data(self) -> dict:
         """
         Sends current data
         :return: -list, contains time, location...-

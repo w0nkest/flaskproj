@@ -32,19 +32,34 @@ class BusStation(SmartThing):
         super().check_connection()
         return 'Bus station is connected!' if self.connect else 'Bus station is not connected'
 
-    def send_data(self):
+    def send_data(self) -> dict:
         """
-        Sends data
-        :return: -list, contains time, temp, location, waiting times...-
+        Собирает данные со всех подключенных датчиков в один пакет
+        :return: dict с текущим состоянием остановки
         """
-        print('Data from bus station will be sent')
+        print(f'Sending aggregated data from Bus Station: {self.location}')
+        
+        # Формируем структуру и собираем данные с датчиков
+        data = {
+            'station_id': self.id,
+            'location': self.location,
+            'status': 'Online' if self.connect else 'Offline',
+            'sensors_data': {
+                'clock': self.clock.send_data(),
+                'temperature': self.temp.send_data()
+            },
+            'waiting_times': self.waittimes 
+        }
+        return data
 
     def update_info(self) -> str:
         """
-        Updates info of sensors
-        :return: string, clock time, current temp
+        Обновляет данные на всех датчиках остановки
+        :return: string с подтверждением обновления
         """
-        return f'{self.clock.update_info()}\n{self.temp.update_info()}'
+        self.clock.update_info()
+        self.temp.update_info()
+        return f'All sensors for station {self.location} (ID: {self.id}) have been updated.'
 
     def request_data(self):
         """
