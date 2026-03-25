@@ -1,5 +1,5 @@
-from Sensors import *
-from BusStation import *
+from models.Sensors import *
+from models.BusStation import *
 
 class MainControlUnit:
     """

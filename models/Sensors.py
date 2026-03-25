@@ -1,4 +1,4 @@
-from SmartThing import *
+from models.SmartThing import *
 from random import randint
 import time
 

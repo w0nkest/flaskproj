@@ -1,5 +1,5 @@
-from SmartThing import *
-from Sensors import *
+from models.SmartThing import *
+from models.Sensors import *
 
 class BusStation(SmartThing):
     """
