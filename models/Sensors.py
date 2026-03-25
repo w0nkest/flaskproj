@@ -15,7 +15,7 @@ class Temperature(SmartThing):
         :param temp: takes temperature as param, unnecessary, if not given takes random number between -30 and 30
         """
         super().__init__(id, location)
-        self.temp = temp
+        self.temp = temp if temp is not None else randint(-30, 30)
 
     def check_connection(self) -> str:
         """
@@ -31,7 +31,12 @@ class Temperature(SmartThing):
         :return: string, contains temperature
         """
         super().update_info()
-        self.temp = randint(-30, 30) # При обновлении новая температура
+        # Симуляция изменения температуры
+        variation = randint(-2, 2)
+        self.temp += variation
+        # Мы в хорошем климотическом поясе
+        if self.temp < -40: self.temp = -40
+        if self.temp > 40: self.temp = 40
         return f'Now temperature reached {self.temp}'
 
     def draw_precipitations(self):
@@ -45,7 +50,15 @@ class Temperature(SmartThing):
         Sends current data
         :return: -list, contains temp, location...-
         """
-        print('Data from temperature will be sent')
+        # Данные в формате словаря для API
+        print(f'Sending temperature data from {self.location}')
+        return {
+            'sensor_id': self.id,
+            'type': 'temperature',
+            'value': self.temp,
+            'unit': 'Celsius',
+            'location': self.location
+        }
 
     def request_data(self):
         """
@@ -66,7 +79,7 @@ class Time(SmartThing):
         :param currenttime: unnecessary, takes time in string format
         """
         super().__init__(id, location)
-        self.currenttime = currenttime
+        self.currenttime = time.strftime("%H:%M:%S")
 
     def check_connection(self) -> str:
         """
@@ -96,6 +109,12 @@ class Time(SmartThing):
         Sends current data
         :return: -list, contains time, location...-
         """
-        print('Data from time will be sent')
+        print(f'Sending time data from {self.location}')
+        return {
+            'sensor_id': self.id,
+            'type': 'clock',
+            'value': self.currenttime,
+            'location': self.location
+        }
 
 
