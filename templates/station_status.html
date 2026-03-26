@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мониторинг системы</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="card">
+            <h2>Остановка: {{ data.location }}</h2>
+            <div class="info-row">
+                <span class="label">Время:</span>
+                <span id="clock-val" class="value">{{ data.sensors_data.clock.value }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Температура:</span>
+                <span id="temp-val" class="value">{{ data.sensors_data.temperature.value }}°C</span>
+            </div>
+            <button class="btn-refresh" onclick="location.reload()">Обновить всё вручную</button>
+        </div>
+
+        <div class="card">
+            <h3 class="bus-header">Транспорт на линии</h3>
+            <div class="info-row">
+                <span class="label">Автобус №:</span>
+                <span class="value">{{ bus.route }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Координаты:</span>
+                <span id="bus-coords" class="value" style="font-size: 0.85em;">{{ bus.lat }}, {{ bus.lon }}</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateData() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(all_data => {
+                    document.getElementById('clock-val').innerText = all_data.station.sensors_data.clock.value;
+                    document.getElementById('temp-val').innerText = all_data.station.sensors_data.temperature.value + '°C';
+                    document.getElementById('bus-coords').innerText = all_data.bus.lat + ', ' + all_data.bus.lon;
+                    
+                    console.log("Данные обновлены автоматически через AJAX");
+                })
+                .catch(error => console.error('Ошибка при получении данных:', error));
+        }
+        setInterval(updateData, 3000);
+    </script>
+</body>
+</html>

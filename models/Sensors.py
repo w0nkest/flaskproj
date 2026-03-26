@@ -1,4 +1,4 @@
-from SmartThing import *
+from models.SmartThing import *
 from random import randint
 import time
 
@@ -31,6 +31,12 @@ class Temperature(SmartThing):
         :return: string, contains temperature
         """
         super().update_info()
+        # Симуляция изменения температуры
+        variation = randint(-2, 2)
+        self.temp += variation
+        # Мы в хорошем климатическом поясе
+        if self.temp < -40: self.temp = -40
+        if self.temp > 40: self.temp = 40
         return f'Now temperature reached {self.temp}'
 
     def draw_precipitations(self):
@@ -39,12 +45,20 @@ class Temperature(SmartThing):
         """
         print('Precipitations will be drawn')
 
-    def send_data(self):
+    def send_data(self) -> dict:
         """
         Sends current data
         :return: -list, contains temp, location...-
         """
-        print('Data from temperature will be sent')
+        # Данные в формате словаря для API
+        print(f'Sending temperature data from {self.location}')
+        return {
+            'sensor_id': self.id,
+            'type': 'temperature',
+            'value': self.temp,
+            'unit': 'Celsius',
+            'location': self.location
+        }
 
     def request_data(self):
         """
@@ -57,7 +71,7 @@ class Time(SmartThing):
     """
     Time class, creates Time sensor - clock
     """
-    def __init__(self, id: int, location: str, currenttime: str=str(time.time())):
+    def __init__(self, id: int, location: str, currenttime: str=time.strftime("%H:%M:%S")):
         """
         Constructor
         :param id: index
@@ -81,6 +95,7 @@ class Time(SmartThing):
         :return: string containing current time
         """
         super().update_info()
+        self.currenttime = time.strftime("%H:%M:%S") # Выводим актуальное время
         return f'Now is {self.currenttime}'
 
     def request_data(self):
@@ -89,11 +104,17 @@ class Time(SmartThing):
         """
         print('Data from time will be requested')
 
-    def send_data(self):
+    def send_data(self) -> dict:
         """
         Sends current data
         :return: -list, contains time, location...-
         """
-        print('Data from time will be sent')
+        print(f'Sending time data from {self.location}')
+        return {
+            'sensor_id': self.id,
+            'type': 'clock',
+            'value': self.currenttime,
+            'location': self.location
+        }
 
 
