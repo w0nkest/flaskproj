@@ -33,25 +33,11 @@ class BusStation(SmartThing):
         super().check_connection()
         return 'Bus station is connected!' if self.connect else 'Bus station is not connected'
 
-    def send_data(self) -> dict:
+    def send_data(self):
         """
-        Собирает данные со всех подключенных датчиков в один пакет
-        :return: dict с текущим состоянием остановки
+        Requests some data
         """
-        print(f'Sending aggregated data from Bus Station: {self.location}')
-        
-        # Формируем структуру и собираем данные с датчиков
-        data = {
-            'station_id': self.id,
-            'location': self.location,
-            'status': 'Online' if self.connect else 'Offline',
-            'sensors_data': {
-                'clock': self.clock.send_data(),
-                'temperature': self.temp.send_data()
-            },
-            'waiting_times': self.waittimes 
-        }
-        return data
+        print('Data from bus station will be requested')
 
     def update_info(self) -> str:
         """
@@ -62,11 +48,25 @@ class BusStation(SmartThing):
         self.temp.update_info()
         return f'All sensors for station {self.location} (ID: {self.id}) have been updated.'
 
-    def request_data(self):
+    def request_data(self) -> dict:
         """
-        Requests some data
+        Собирает данные со всех подключенных датчиков в один пакет
+        :return: dict: { station_id, location, status,
+        sensors_data { clock, temperature }, waiting_times }
         """
-        print('Data from bus station will be requested')
+        print(f'Sending aggregated data from Bus Station: {self.location}')
+
+        data = {
+            'station_id': self.id,
+            'location': self.location,
+            'status': 'Online' if self.connect else 'Offline',
+            'sensors_data': {
+                'clock': self.clock.send_data(),
+                'temperature': self.temp.send_data()
+            },
+            'waiting_times': self.waittimes
+        }
+        return data
 
 
 class Bus:
@@ -101,7 +101,7 @@ class Bus:
 
     def update_route_screen(self):
         """
-        Updates route screen
+        Updates route screen and GPS data
         """
         if self.connect:
             self.lat += random.uniform(-0.001, 0.001)
@@ -109,10 +109,20 @@ class Bus:
             return f"Bus {self.route} is moving..."
         return "Bus is offline"
 
-    def send_GPS(self):
+    def send_GPS(self) -> dict:
         """
         Sends GPS data
-        :return: string: GPS
+        :return: dict: { lat, lon }
+        """
+        return {
+            'lat': round(self.lat, 4),
+            'lon': round(self.lon, 4),
+        }
+
+    def request_data(self) -> dict:
+        """
+        Sends Bus data data
+        :return: dict: { route, lat, lon, status }
         """
         return {
             'route': self.route,
@@ -120,3 +130,6 @@ class Bus:
             'lon': round(self.lon, 4),
             'status': 'In route' if self.connect else 'In depot'
         }
+
+    def request_GPS(self):
+        pass

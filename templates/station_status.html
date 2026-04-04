@@ -3,34 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Мониторинг системы</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
 </head>
 <body>
     <div class="main-container">
-        <div class="card">
-            <h2>Остановка: {{ data.location }}</h2>
-            <div class="info-row">
-                <span class="label">Время:</span>
-                <span id="clock-val" class="value">{{ data.sensors_data.clock.value }}</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Температура:</span>
-                <span id="temp-val" class="value">{{ data.sensors_data.temperature.value }}°C</span>
-            </div>
-            <button class="btn-refresh" onclick="manualUpdate()">Обновить всё вручную</button>
+        <div>
+            <button id="btn-allowauto" class="btn-updatetype" onclick="changeUpdateState()">Отключить автообновление</button>
         </div>
-
-        <div class="card">
-            <h3 class="bus-header">Транспорт на линии</h3>
-            <div class="info-row">
-                <span class="label">Автобус №:</span>
-                <span class="value">{{ bus.route }}</span>
+        <div class="card-container">
+            <div class="grid-lineup">
+                <div class="card">
+                    <h2>Остановка: {{ data.location }}</h2>
+                    <div class="info-row">
+                        <span class="label">Время:</span>
+                        <span id="clock-val" class="value">{{ data.sensors_data.clock.value }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Температура:</span>
+                        <span id="temp-val" class="value">{{ data.sensors_data.temperature.value }}°C</span>
+                    </div>
+                    <button class="btn-refresh" onclick="manualUpdate()"
+                            style="border-bottom-color: #ffc107">Обновить всё вручную</button>
+                </div>
+                <div class="card">
+                    <h2>Изменение информации</h2>
+                    <div class="info-row">
+                        <label for="clock-inp" class="label">Время:</label>
+                        <input id="clock-inp" class="value" type="time">
+                    </div>
+                    <div class="info-row">
+                        <label for="temp-inp" class="label">Температура:</label>
+                        <input id="temp-inp" class="value" type="text" placeholder="some °C">
+                    </div>
+                    <button class="btn-refresh" onclick="">Изменить</button>
+                </div>
             </div>
-            <div class="info-row">
-                <span class="label">Координаты:</span>
-                <span id="bus-coords" class="value" style="font-size: 0.85em;">{{ bus.lat }}, {{ bus.lon }}</span>
+            <div class="grid-lineup">
+                <div class="card">
+                    <h3 class="bus-header">Транспорт на линии</h3>
+                    <div class="info-row">
+                        <span class="label">Автобус №:</span>
+                        <span class="value">{{ bus.route }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Координаты:</span>
+                        <span id="bus-coords" class="value" style="font-size: 0.85em;">{{ bus.lat }}, {{ bus.lon }}</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="bus-header">Изменение информации</h3>
+                    <div class="info-row">
+                        <label for="bus-lat-inp" class="label">Широта:</label>
+                        <input id="bus-lat-inp" class="value" type="text" placeholder="88.888">
+                    </div>
+                    <div class="info-row">
+                        <label for="bus-lon-inp" class="label">Долгота:</label>
+                        <input id="bus-lon-inp" class="value" type="text" placeholder="55.555">
+                    </div>
+                    <button class="btn-refresh-orng" onclick="">Изменить</button>
+                </div>
             </div>
         </div>
     </div>

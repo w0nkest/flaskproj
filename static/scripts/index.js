@@ -1,9 +1,26 @@
-setInterval(updateData, 3000)
+let allowAutoUpdate = true
+let updateInterval = setInterval(updateData, 2000)
+
+function changeUpdateState() {
+    allowAutoUpdate = !allowAutoUpdate
+    console.log(allowAutoUpdate)
+
+    if (allowAutoUpdate) {
+        document.getElementById('btn-allowauto').innerHTML = "Отключить автообновление"
+        updateData()
+        updateInterval = setInterval(updateData, 2000)
+    }
+    else {
+        document.getElementById('btn-allowauto').innerHTML = "Включить автообновление"
+        clearInterval(updateInterval)
+        updateInterval = null
+    }
+}
 
 function updateData() {
     $.ajax({
         type: 'GET',
-        url: '/api/status',
+        url: '/api/emulate',
         dataType: 'json',
         contentType: 'application/json',
         data: {},
