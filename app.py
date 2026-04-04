@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, redirect
+from flask import Flask, render_template, jsonify, redirect, request
 from tools.devcheck import *
 
 app = Flask(__name__)
@@ -59,6 +59,12 @@ def emulate_things():
     station.update_info()
     bus.update_route_screen()
 
+    return update_things()
+
+@app.route('/api/update')
+def update_things():
+    global station, bus
+
     return jsonify({
         'station': station.request_data(),
         'bus': bus.request_data()
@@ -67,7 +73,16 @@ def emulate_things():
 
 @app.route('/api/push')
 def push_things():
-    pass
+    global station, bus
+
+    if request.args.get('type') == 'full':
+        station.send_data(request)
+        bus.send_GPS(request)
+    elif request.args.get('type') == 'bus':
+        bus.send_GPS(request)
+    elif request.args.get('type') == 'busstation':
+        station.send_data(request)
+    return {}
 
 
 if __name__ == '__main__':
