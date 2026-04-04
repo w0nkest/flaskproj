@@ -33,11 +33,15 @@ class BusStation(SmartThing):
         super().check_connection()
         return 'Bus station is connected!' if self.connect else 'Bus station is not connected'
 
-    def send_data(self):
+    def send_data(self, request):
         """
-        Requests some data
+        Receives some data
         """
-        print('Data from bus station will be requested')
+        print('Data will be sent')
+        self.clock.send_data(request)
+        self.temp.send_data(request)
+
+
 
     def update_info(self) -> str:
         """
@@ -61,8 +65,8 @@ class BusStation(SmartThing):
             'location': self.location,
             'status': 'Online' if self.connect else 'Offline',
             'sensors_data': {
-                'clock': self.clock.send_data(),
-                'temperature': self.temp.send_data()
+                'clock': self.clock.request_data(),
+                'temperature': self.temp.request_data()
             },
             'waiting_times': self.waittimes
         }
@@ -109,15 +113,18 @@ class Bus:
             return f"Bus {self.route} is moving..."
         return "Bus is offline"
 
-    def send_GPS(self) -> dict:
+    def send_GPS(self, request):
         """
-        Sends GPS data
-        :return: dict: { lat, lon }
+        Receives GPS data
+        :param request: json object
+        :return:
         """
-        return {
-            'lat': round(self.lat, 4),
-            'lon': round(self.lon, 4),
-        }
+        requestdata = (request.args.get('lat'), request.args.get('lon'))
+        try:
+            requestdata = map(float, requestdata)
+            self.lat, self.lon = requestdata
+        except:
+            self.update_route_screen()
 
     def request_data(self) -> dict:
         """
@@ -131,5 +138,12 @@ class Bus:
             'status': 'In route' if self.connect else 'In depot'
         }
 
-    def request_GPS(self):
-        pass
+    def request_GPS(self) -> dict:
+        """
+        Sends GPS data
+        :return: dict: { lat, lon }
+        """
+        return {
+            'lat': round(self.lat, 4),
+            'lon': round(self.lon, 4),
+        }

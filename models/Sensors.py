@@ -25,16 +25,16 @@ class Temperature(SmartThing):
         super().check_connection()
         return 'Temperature sensor is connected!' if self.connect else 'Temperature sensor is not connected'
 
+
+
     def update_info(self) -> str:
         """
         Gets current temperature info
         :return: string, contains temperature
         """
         super().update_info()
-        # Симуляция изменения температуры
         variation = randint(-2, 2)
         self.temp += variation
-        # Мы в хорошем климатическом поясе
         if self.temp < -40: self.temp = -40
         if self.temp > 40: self.temp = 40
         return f'Now temperature reached {self.temp}'
@@ -45,7 +45,20 @@ class Temperature(SmartThing):
         """
         print('Precipitations will be drawn')
 
-    def send_data(self) -> dict:
+    def send_data(self, request):
+        """
+        Receives new data
+        :return:
+        """
+        requestdata = request.args.get('temp')
+        try:
+            requestdata = int(requestdata)
+            self.temp = requestdata
+        except:
+            self.update_info()
+
+
+    def request_data(self) -> dict:
         """
         Sends current data
         :return: -list, contains temp, location...-
@@ -60,11 +73,6 @@ class Temperature(SmartThing):
             'location': self.location
         }
 
-    def request_data(self):
-        """
-        Request some data
-        """
-        print('Data from temperature will be requested')
 
 
 class Time(SmartThing):
@@ -95,19 +103,13 @@ class Time(SmartThing):
         :return: string containing current time
         """
         super().update_info()
-        self.currenttime = time.strftime("%H:%M:%S") # Выводим актуальное время
+        self.currenttime = time.strftime("%H:%M:%S")
         return f'Now is {self.currenttime}'
 
-    def request_data(self):
-        """
-        Request some data
-        """
-        print('Data from time will be requested')
-
-    def send_data(self) -> dict:
+    def request_data(self) -> dict:
         """
         Sends current data
-        :return: -list, contains time, location...-
+        :return: dict: { sensor_id, type, value, location }
         """
         print(f'Sending time data from {self.location}')
         return {
@@ -116,5 +118,19 @@ class Time(SmartThing):
             'value': self.currenttime,
             'location': self.location
         }
+
+    def send_data(self, request):
+        """
+        Receives new data
+        :return:
+        """
+        requestdata = request.args.get('clock')
+        try:
+            if requestdata == '' or requestdata is None:
+                raise ValueError
+
+            self.currenttime = requestdata
+        except:
+            self.update_info()
 
 

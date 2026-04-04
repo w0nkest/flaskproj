@@ -7,7 +7,7 @@ class SmartThing(abc.ABC):
         self.connect = False
 
     @abc.abstractmethod
-    def send_data(self):
+    def send_data(self, request):
         pass
 
     @abc.abstractmethod
