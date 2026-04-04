@@ -1,4 +1,4 @@
-body { 
+body {
     font-family: sans-serif; 
     background-color: #f4f4f4; 
     display: flex; 
@@ -89,10 +89,12 @@ h2, h3 {
 }
 
 .btn-updatetype {
-    background: #0086b3
+    background: #0086b3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
 }
 .btn-updatetype:hover {
-    background: #006080
+    background: #006080;
 }
 
 .btn-refresh-orng {
@@ -107,4 +109,11 @@ h2, h3 {
     text-align: center; 
     color: #888; 
     font-size: 0.8em;
+}
+
+@media all and (max-width: 1000px) {
+    .grid-lineup {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
 }
