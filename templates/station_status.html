@@ -5,7 +5,7 @@
     <title>Мониторинг системы</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='scripts/ajax3.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
 </head>
 <body>
     <div class="main-container">
@@ -19,7 +19,7 @@
                 <span class="label">Температура:</span>
                 <span id="temp-val" class="value">{{ data.sensors_data.temperature.value }}°C</span>
             </div>
-            <button class="btn-refresh" onclick="location.reload()">Обновить всё вручную</button>
+            <button class="btn-refresh" onclick="manualUpdate()">Обновить всё вручную</button>
         </div>
 
         <div class="card">

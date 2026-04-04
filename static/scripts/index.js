@@ -1,4 +1,4 @@
-setInterval(updateData, 1000)
+setInterval(updateData, 3000)
 
 function updateData() {
     $.ajax({
@@ -9,17 +9,22 @@ function updateData() {
         data: {},
         success: function (response) {
             if (response.station && response.station.sensors_data && response.station.sensors_data.clock) {
-                $('#clock-val').text(response.station.sensors_data.clock.value);
+                document.getElementById("clock-val").innerHTML = response.station.sensors_data.clock.value
             }
 
-            // Обновляем температуру на остановке
             if (response.station && response.station.sensors_data && response.station.sensors_data.temperature) {
-                $('#temp-val').text(response.station.sensors_data.temperature.value + '°C');
+                document.getElementById("temp-val").innerHTML =
+                    (response.station.sensors_data.temperature.value + '°C');
             }
 
-            // Обновляем координаты автобуса
             if (response.bus) {
-                $('#bus-coords').text(response.bus.lat + ', ' + response.bus.lon);
+                document.getElementById('bus-coords').innerHTML =
+                    (response.bus.lat + ', ' + response.bus.lon);
+            }
         }
-    }})
+    })
+}
+
+function manualUpdate() {
+    updateData()
 }
