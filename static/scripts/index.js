@@ -82,6 +82,7 @@ function sendData() {
         dataType: 'json',
         contentType: 'application/json',
         data: {
+            'type': 'full',
             'clock': document.getElementById('clock-inp').value,
             'temp': document.getElementById('temp-inp').value,
             'lat': document.getElementById('bus-lat-inp').value,
@@ -92,5 +93,40 @@ function sendData() {
     renewData()
     console.log(document.getElementById('clock-inp').value)
 }
+
+function sendBusData() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/push',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: {
+            'type': 'bus',
+            'lat': document.getElementById('bus-lat-inp').value,
+            'lon': document.getElementById('bus-lon-inp').value,
+        },
+        success: function (response) { }
+    })
+    renewData()
+    console.log(document.getElementById('clock-inp').value)
+}
+
+function sendBusStationData() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/push',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: {
+            'type': 'busstation',
+            'clock': document.getElementById('clock-inp').value,
+            'temp': document.getElementById('temp-inp').value,
+        },
+        success: function (response) { }
+    })
+    renewData()
+    console.log(document.getElementById('clock-inp').value)
+}
+
 
 function clearInputs() { document.querySelectorAll('input').forEach(input => input.value = '') }

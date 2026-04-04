@@ -74,8 +74,14 @@ def update_things():
 @app.route('/api/push')
 def push_things():
     global station, bus
-    station.send_data(request)
-    bus.send_GPS(request)
+
+    if request.args.get('type') == 'full':
+        station.send_data(request)
+        bus.send_GPS(request)
+    elif request.args.get('type') == 'bus':
+        bus.send_GPS(request)
+    elif request.args.get('type') == 'busstation':
+        station.send_data(request)
     return {}
 
 
