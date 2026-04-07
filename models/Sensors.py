@@ -129,7 +129,7 @@ class Time(SmartThing):
         requestdata = request.args.get('clock')
         try:
             pattern = r'[0-9]{2}:[0-9]{2}:[0-9]{2}'
-            if requestdata == '' or requestdata is None or re.match(pattern, requestdata) is None:
+            if re.match(pattern, requestdata) is None:
                 print(requestdata)
                 raise ValueError
 
