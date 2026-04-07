@@ -1,3 +1,5 @@
+import re
+
 from models.SmartThing import *
 from random import randint
 import time
@@ -126,7 +128,9 @@ class Time(SmartThing):
         """
         requestdata = request.args.get('clock')
         try:
-            if requestdata == '' or requestdata is None:
+            pattern = r'[0-9]{2}:[0-9]{2}:[0-9]{2}'
+            if requestdata == '' or requestdata is None or re.match(pattern, requestdata) is None:
+                print(requestdata)
                 raise ValueError
 
             self.currenttime = requestdata
