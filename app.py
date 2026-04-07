@@ -61,6 +61,7 @@ def emulate_things():
 
     return update_things()
 
+
 @app.route('/api/update')
 def update_things():
     global station, bus
@@ -86,11 +87,9 @@ def push_things():
 
 
 if __name__ == '__main__':
-
     time_sensor = Time(101, 'Фитнес-Хаус на Блюхера')
     temp_sensor = Temperature(201, 'Фитнес-Хаус на Блюхера')
     station = BusStation(6, 'Фитнес-Хаус на Блюхера', time_sensor, temp_sensor)
     bus = Bus('222', [station])
 
     app.run()
-
