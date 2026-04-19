@@ -35,6 +35,28 @@
                         <span class="label">Температура:</span>
                         <span id="temp-val" class="value">{{ data.sensors_data.temperature.value }}°C</span>
                     </div>
+
+
+                    <div class="card" style="grid-column: span 2;">
+                        <h3 class="bus-header">📋 Расписание ожидания автобусов</h3>
+                        <div class="table-wrapper">
+                            <table id="waiting-table" class="waiting-table">
+                                <thead>
+                                    <tr>
+                                        <th>Маршрут</th>
+                                        <th>Статус ожидания</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="waiting-table-body">
+                                    <tr>
+                                        <td colspan="2" class="loading-text">Загрузка данных...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
                     <button class="btn-refresh" onclick="emulateData()"
                             style="border-bottom-color: #ffc107">Обновить всё вручную</button>
                 </div>

@@ -117,3 +117,29 @@ h2, h3 {
         grid-template-rows: auto auto;
     }
 }
+
+.waiting-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.waiting-table th {
+    background: #ffc107;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.waiting-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.status-waiting { color: #ff9800; }
+.status-arriving { color: #4caf50; }
+
+.loading-text {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}

@@ -49,7 +49,7 @@ class Temperature(SmartThing):
 
     def send_data(self, request):
         """
-        Receives new data
+        Receives new temperature data and sets received one to current value
         :return:
         """
         requestdata = request.args.get('temp')

@@ -38,9 +38,14 @@ function emulateData() {
                     document.getElementById('bus-coords').innerHTML =
                         (response.bus.lat + ', ' + response.bus.lon);
                 }
+
+                if (response.station && response.station.waiting_times) {
+                    updateWaitingTable(response.station.waiting_times);
+                }
             }
         })
 }
+
 function renewData() {
     $.ajax({
             type: 'GET',
@@ -61,6 +66,10 @@ function renewData() {
                 if (response.bus) {
                     document.getElementById('bus-coords').innerHTML =
                         (response.bus.lat + ', ' + response.bus.lon);
+                }
+
+                if (response.station && response.station.waiting_times) {
+                    updateWaitingTable(response.station.waiting_times);
                 }
             }
         })
@@ -130,3 +139,28 @@ function sendBusStationData() {
 
 
 function clearInputs() { document.querySelectorAll('input').forEach(input => input.value = '') }
+
+function updateWaitingTable(waitingTimes) {
+    const tbody = document.getElementById('waiting-table-body');
+
+    if (!waitingTimes || Object.keys(waitingTimes).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="loading-text">Нет данных об автобусах</td></tr>';
+        return;
+    }
+
+    let html = '';
+
+    for (const [route, state] of Object.entries(waitingTimes)) {
+        const statusText = state === 'near' ? 'Уже близко' : 'Еще едет';
+        const statusClass = state === 'near' ? 'status-arriving' : 'status-waiting';
+
+        html += `
+            <tr>
+                <td><strong>${route}</strong></td>
+                <td><span class="${statusClass}">${statusText}</span></td>
+            </tr>
+        `;
+    }
+
+    tbody.innerHTML = html;
+}

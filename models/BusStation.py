@@ -1,29 +1,40 @@
-from models.SmartThing import *
 from models.Sensors import *
-import random
 
 class BusStation(SmartThing):
     """
     BusStation obj
     """
-    def __init__(self, id: int, location: str, clock: Time, temp: Temperature):
+    def __init__(self, id: int, location: str, coords: tuple[float, float], clock: Time,
+                 temp: Temperature, buses=None):
         """
         Constructor
         :param id: index
         :param location: string, containing location
         :param clock: Time, connected clock
         :param temp: Temperature, connected temperature sensor
+        :param buses: list of Bus - creates list of tuples (bus, state), state can be either far or near
         """
         super().__init__(id, location)
         self.clock = clock
         self.temp = temp
-        self.waittimes = list()
+        self._buses = [(bus, 'far') for bus in buses] if buses is not None else []
+        self.coords = coords
+
+    def add_bus(self, bus):
+        self._buses.append((bus, 'far'))
 
     def update_waitingtimes(self):
         """
-        Updates waiting times list
+        Updates state of buses, connected to this station
         """
-        print('Waiting times will be updated')
+        def compare_coords(static: tuple[float, float], moving: tuple[float, float]) -> float:
+            return ((static[0] - moving[0]) ** 2 + (static[1] - moving[1]) ** 2) ** 0.5
+
+        for i, (bus, state) in enumerate(self._buses):
+            if compare_coords((bus.lat, bus.lon), self.coords) < 0.015:
+                self._buses[i] = (bus, 'near')
+            else:
+                self._buses[i] = (bus, 'far')
 
     def check_connection(self) -> str:
         """
@@ -40,8 +51,6 @@ class BusStation(SmartThing):
         print('Data will be sent')
         self.clock.send_data(request)
         self.temp.send_data(request)
-
-
 
     def update_info(self) -> str:
         """
@@ -68,82 +77,6 @@ class BusStation(SmartThing):
                 'clock': self.clock.request_data(),
                 'temperature': self.temp.request_data()
             },
-            'waiting_times': self.waittimes
+            'waiting_times': dict([(bus.route, state) for bus, state in self._buses])
         }
         return data
-
-
-class Bus:
-    """
-    Bus creature
-    """
-    def __init__(self, route: str, stations: list[BusStation]):
-        """
-        Constructor
-        :param route: str, number of route
-        :param stations: list of BusStation
-        """
-        self.route = route
-        self.stations = stations
-        self.connect = False
-        self.lat = 59.9343
-        self.lon = 30.3351
-
-    def connection(self):
-        """
-        Establishes connection
-        """
-        self.connect = True
-        print(f'Bus {self.route} connected to GPS')
-
-    def check_connection(self) -> str:
-        """
-        Checks connection
-        :return: string, state of connection
-        """
-        return 'Bus is connected' if self.connect else 'Bus is not connected'
-
-    def update_route_screen(self):
-        """
-        Updates route screen and GPS data
-        """
-        if self.connect:
-            self.lat += random.uniform(-0.001, 0.001)
-            self.lon += random.uniform(-0.001, 0.001)
-            return f"Bus {self.route} is moving..."
-        return "Bus is offline"
-
-    def send_GPS(self, request):
-        """
-        Receives GPS data
-        :param request: json object
-        :return:
-        """
-        requestdata = (request.args.get('lat'), request.args.get('lon'))
-        try:
-            requestdata = map(float, requestdata)
-            self.lat, self.lon = requestdata
-        except:
-            self.update_route_screen()
-
-    def request_data(self) -> dict:
-        """
-        Sends Bus data data
-        :return: dict: { route, lat, lon, status }
-        """
-        return {
-            'route': self.route,
-            'lat': round(self.lat, 4),
-            'lon': round(self.lon, 4),
-            'status': 'In route' if self.connect else 'In depot'
-        }
-
-    def request_GPS(self) -> dict:
-        """
-        Sends GPS data
-        :return: dict: { lat, lon }
-        """
-        return {
-            'lat': round(self.lat, 4),
-            'lon': round(self.lon, 4),
-        }
