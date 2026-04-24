@@ -8,6 +8,8 @@ app = Flask(__name__)
 logger = Logger('bus_monitoring')
 
 def PerformLogging():
+    global logger
+    
     temp_value = station.temp.temp
     logger.log_temperature(temp_value)
     logger.log_bus_position(bus.route, bus.lat, bus.lon)
@@ -46,11 +48,16 @@ def emulate_things():
 
 @app.route('/api/update')
 def update_things():
-    global station, bus
+    global station, bus, logger
 
     return jsonify({
         'station': station.request_data(),
-        'bus': bus.request_data()
+        'bus': bus.request_data(),
+        'stats': {
+            'temperature': logger.get_temperature_stats,
+            'bus_position_count': logger.get_bus_position_count,
+            'last_bus_position': logger.get_last_bus_position
+        }
     })
 
 
