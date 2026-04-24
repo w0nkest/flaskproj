@@ -1,5 +1,6 @@
 from models.Sensors import *
 from models.BusStation import *
+from models.Bus import *
 
 class MainControlUnit:
     """
