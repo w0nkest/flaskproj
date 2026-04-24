@@ -54,9 +54,9 @@ def update_things():
         'station': station.request_data(),
         'bus': bus.request_data(),
         'stats': {
-            'temperature': logger.get_temperature_stats,
-            'bus_position_count': logger.get_bus_position_count,
-            'last_bus_position': logger.get_last_bus_position
+            'temperature': logger.get_temperature_stats(),
+            'bus_position_count': logger.get_bus_position_count(),
+            'last_bus_position': logger.get_last_bus_position()
         }
     })
 
