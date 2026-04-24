@@ -2,8 +2,15 @@ from flask import Flask, render_template, jsonify, redirect, request
 from models.Bus import Bus
 from models.BusStation import BusStation
 from models.Sensors import Temperature, Time
+from models.Logger import Logger
 
 app = Flask(__name__)
+logger = Logger('bus_monitoring')
+
+def PerformLogging():
+    temp_value = station.temp.temp
+    logger.log_temperature(temp_value)
+    logger.log_bus_position(bus.route, bus.lat, bus.lon)
 
 @app.route('/')
 def connectionchecking():
@@ -30,6 +37,9 @@ def emulate_things():
 
     station.update_info()
     bus.update_route_screen()
+    
+    # Логируем братья
+    PerformLogging()
 
     return update_things()
 
@@ -55,6 +65,9 @@ def push_things():
         bus.send_GPS(request)
     elif request.args.get('type') == 'busstation':
         station.send_data(request)
+    
+    #Логируем сёстры
+    PerformLogging()
     return {}
 
 
