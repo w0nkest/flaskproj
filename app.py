@@ -60,7 +60,6 @@ def update_things():
         }
     })
 
-
 @app.route('/api/push')
 def push_things():
     global station, bus
@@ -77,6 +76,15 @@ def push_things():
     PerformLogging()
     return {}
 
+@app.route('/chart')
+def show_chart():
+    return render_template('temperature_chart.html')
+
+@app.route('/api/chart/temperature')
+def get_temperature_chart_data():
+    global logger
+    history = logger.get_temperature_history()
+    return jsonify(history)
 
 if __name__ == '__main__':
     time_sensor = Time(101, 'Фитнес-Хаус на Блюхера')
