@@ -49,3 +49,12 @@ class Logger:
                 'timestamp': last.get('timestamp')
             }
         return None
+    
+    def get_temperature_history(self):
+        cursor = self.db['temperature_log'].find({}, {'_id': 0}).sort('timestamp', 1)
+        labels = []
+        data = []
+        for doc in cursor:
+            labels.append(doc['timestamp'])
+            data.append(doc['temperature'])
+        return {'labels': labels, 'data': data}
