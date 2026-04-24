@@ -26,3 +26,26 @@ class Logger:
             'lon': lon
         }
         return self.db['bus_position_log'].insert_one(record)
+    
+    def get_temperature_stats(self):
+        cursor = self.db['temperature_log'].find({}, {'_id': 0, 'temperature': 1})
+        temps = [doc['temperature'] for doc in cursor]
+        if not temps:
+            return None
+        avg_temp = sum(temps) / len(temps)
+        max_temp = max(temps)
+        return {'avg': round(avg_temp, 2), 'max': round(max_temp, 2)}
+
+    def get_bus_position_count(self):
+        return self.db['bus_position_log'].count_documents({})
+
+    def get_last_bus_position(self):
+        last = self.db['bus_position_log'].find_one(sort=[('_id', -1)])
+        if last:
+            return {
+                'route': last.get('route'),
+                'lat': last.get('lat'),
+                'lon': last.get('lon'),
+                'timestamp': last.get('timestamp')
+            }
+        return None
