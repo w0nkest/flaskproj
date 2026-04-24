@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>График температуры</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-image: url("{{ url_for('static', filename='images/background.png') }}");
+            background-repeat: repeat;
+            margin: 30px;
+        }
+        .chart-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/status" class="back-link">← Назад к мониторингу</a>
+
+    <div class="chart-container">
+        <h2>Грфик температуры температуры</h2>
+        <canvas id="temperatureChart" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/api/chart/temperature',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.labels && response.data) {
+                        renderChart(response.labels, response.data);
+                    } else {
+                        alert('Нет данных для отображения графика.');
+                    }
+                },
+                error: function() {
+                    alert('Ошибка загрузки данных с сервера.');
+                }
+            });
+
+            function renderChart(labels, data) {
+                const ctx = document.getElementById('temperatureChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Температура (°C)',
+                            data: data,
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ff6b6b',
+                            pointRadius: 4,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Динамика температуры на остановке',
+                                font: { size: 18 }
+                            },
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Температура, °C'
+                                },
+                                grid: {
+                                    color: '#eee'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Время'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
