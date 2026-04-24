@@ -1,6 +1,30 @@
 let allowAutoUpdate = true
 let updateInterval = setInterval(updateData, 2000)
 
+function updateStats(stats) {
+    if (stats && stats.temperature) {
+        document.getElementById('temp-avg').innerText = stats.temperature.avg + '°C';
+        document.getElementById('temp-max').innerText = stats.temperature.max + '°C';
+    } else {
+        document.getElementById('temp-avg').innerText = '—';
+        document.getElementById('temp-max').innerText = '—';
+    }
+
+    if (stats) {
+        document.getElementById('bus-log-count').innerText = stats.bus_position_count || 0;
+        if (stats.last_bus_position) {
+            const pos = stats.last_bus_position;
+            document.getElementById('bus-last-pos').innerText = 
+                `Маршрут ${pos.route}: ${pos.lat}, ${pos.lon} (${pos.timestamp})`;
+        } else {
+            document.getElementById('bus-last-pos').innerText = '—';
+        }
+    } else {
+        document.getElementById('bus-log-count').innerText = 0;
+        document.getElementById('bus-last-pos').innerText = '—';
+    }
+}
+
 function changeUpdateState() {
     allowAutoUpdate = !allowAutoUpdate
     console.log(allowAutoUpdate)
@@ -42,6 +66,8 @@ function emulateData() {
                 if (response.station && response.station.waiting_times) {
                     updateWaitingTable(response.station.waiting_times);
                 }
+
+                updateStats(response.stats);
             }
         })
 }
@@ -71,6 +97,8 @@ function renewData() {
                 if (response.station && response.station.waiting_times) {
                     updateWaitingTable(response.station.waiting_times);
                 }
+
+                updateStats(response.stats);
             }
         })
 }

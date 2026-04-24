@@ -99,6 +99,28 @@
                 </div>
             </div>
             <div class="grid-lineup">
+                <div class="card">
+                    <h2>📊 Статистика системы</h2>
+                    <div class="info-row">
+                        <span class="label">Средняя температура (всего):</span>
+                        <span id="temp-avg" class="value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Максимальная температура:</span>
+                        <span id="temp-max" class="value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Сохранено координат автобуса:</span>
+                        <span id="bus-log-count" class="value">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Последние координаты:</span>
+                        <span id="bus-last-pos" class="value">—</span>
+                    </div>
+                </div>
+                <div></div> <!-- пустая ячейка для сохранения сетки -->
+            </div>
+            <div class="grid-lineup">
                 <div></div>
                 <div>
                     <button class="btn-updatetype" onclick="sendData()">Изменить всё</button>
